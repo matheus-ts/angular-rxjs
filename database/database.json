@@ -1,0 +1,25 @@
+{
+    "data": [
+        {
+            "name": "Produto 1",
+            "value": "10.12",
+            "description": "produto teste 1 promo"
+        },
+        {
+            "name": "Produto 2",
+            "value": "10.12",
+            "description": "produto teste 2"
+        },
+        {
+            "name": "Produto 3",
+            "value": "10.12",
+            "description": "produto teste 3 promo"
+        }
+        ,{
+            "name": "Produto 4",
+            "value": "10.12",
+            "description": "produto teste 4"
+        }
+    ],
+    "codigoTransacao": "1234-12124-414141"
+}
