@@ -10,9 +10,16 @@ import { Router } from '@angular/router';
 })
 export class LoginComponent implements OnInit {
 
-  constructor(private authService: AuthService, private router: Router) { }
+  firstAccess!: boolean 
+
+  constructor(public authService: AuthService, private router: Router) { 
+    this.firstAccess = this.authService.isFirstAccess() 
+  }
 
   ngOnInit(): void {
+    if(this.authService.isFirstAccess()){
+      alert('Bem-vindo à nossa aplicação!');
+    }
   }
 
   login(){

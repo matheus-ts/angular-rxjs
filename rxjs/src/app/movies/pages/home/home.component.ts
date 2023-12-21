@@ -1,15 +1,15 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 import { Movie, MovieResult } from '../../helpers/model/movies.model';
 import { MovieService } from '../../services/movie.service';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
-import { Subject, Subscription, debounceTime, map, tap } from 'rxjs';
+import { Subject, Subscription, debounceTime, distinctUntilChanged, map, switchMap, tap } from 'rxjs';
 
 @Component({
   selector: 'app-home',
   templateUrl: './home.component.html',
   styleUrls: ['./home.component.css']
 })
-export class HomeComponent implements OnInit {
+export class HomeComponent implements OnInit, OnDestroy {
 
   tableMovies: MovieResult[] = []
 
@@ -31,6 +31,12 @@ export class HomeComponent implements OnInit {
     this.createForm()
   }
 
+  ngOnDestroy() {
+    if(this.subscription){
+      this.subscription.unsubscribe(); // Certifique-se de cancelar a assinatura ao destruir o componente
+    }
+  }
+
   createForm(){
     this.movieForm = new FormGroup({
       without_keywords: new FormControl('', Validators.required)
@@ -39,18 +45,32 @@ export class HomeComponent implements OnInit {
 
   typeEvent(event: any){
     this.movieChange.next(event?.target.value)
-    this.filterMovies()
+    this.subscription = this.movieChange.pipe(
+      tap(() => this.isLoading = true),
+      debounceTime(5000),
+      distinctUntilChanged(),
+    ).subscribe((movie: string) => {
+    this.movieService.filterPopular(movie).subscribe(
+      (response) => this.tableMovies = response,
+      (error) => console.log(error),
+      () => {this.setPoster(), this.isLoading = false }
+    )
+  })  
   }
 
   filterMovies(){
-    this.subscription = this.movieChange.pipe(debounceTime(1000)).subscribe((movie: string) => {
-      this.movieService.filterPopular(movie).pipe(tap(() => this.isLoading = true)).subscribe(
+      this.subscription = this.movieChange.pipe(
+        debounceTime(1000),
+        distinctUntilChanged()  
+      ).subscribe((movie: string) => {
+      this.movieService.filterPopular(movie).pipe(
+        tap(() => this.isLoading = true)
+      ).subscribe(
         (response) => this.tableMovies = response,
         (error) => console.log(error),
-        () => {this.setPoster(), this.isLoading = false, this.subscription.unsubscribe()}
+        () => {this.setPoster(), this.isLoading = false }
       )
-    })
-    
+    })  
   }
 
   setPoster(){

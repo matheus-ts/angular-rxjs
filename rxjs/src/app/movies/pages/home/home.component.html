@@ -5,6 +5,9 @@
                 Movie Search
             </h2>
         </div>
+        <div>
+            <a [routerLink]="['/login']">Voltar</a>
+        </div>
     </div>
     <div class="row my-3 d-flex justify-content-center">
     <form [formGroup]="movieForm" class="col-sm-12 col-md-4">
@@ -35,6 +38,7 @@
     </div>
 
     <ng-template #loading>
+        <img src="https://hackernoon.com/images/0*4Gzjgh9Y7Gu8KEtZ.gif" width="200px" alt="Imagem de um loading">
         Aguarde estamos procurando filmes...
     </ng-template>
 </div>

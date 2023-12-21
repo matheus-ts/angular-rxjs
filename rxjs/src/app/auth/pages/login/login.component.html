@@ -1,5 +1,8 @@
-<div class="container">
-    <div class="d-flex align-items justify-content-center">
+<div class="container h-100 p-5 d-flex flex-column align-items justify-content-center">
+    <div class="title-container text-align-center my-3">
+        <h2>Olá <b *ngIf="!firstAccess">Novamente</b> faça login para habilitar a pesquisa de filmes</h2>
+    </div>
+    <div class="row">
         <button (click)="login()" class="btn">Login</button>
     </div>
 </div>
