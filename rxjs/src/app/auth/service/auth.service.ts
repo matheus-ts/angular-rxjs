@@ -2,6 +2,7 @@ import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable, debounceTime, tap } from 'rxjs';
 import { endpoints } from 'src/environments/endpoints';
+import { environment } from 'src/environments/environment';
 
 @Injectable({
   providedIn: 'root'
@@ -9,7 +10,8 @@ import { endpoints } from 'src/environments/endpoints';
 export class AuthService {
 
   private readonly FIRST_ACCESS_KEY = 'firstAccess';
-
+  private readonly ACCESS_TOKEN = 'token';
+    
   constructor(private http: HttpClient) { }
 
   isFirstAccess(): boolean {
@@ -21,6 +23,6 @@ export class AuthService {
   }
 
   authenticate(): Observable<any>{
-    return this.http.get(endpoints.authenticate).pipe(tap(console.log), debounceTime(10000), tap(console.log))
+    return this.http.get<any>(endpoints.authenticate)
   }
 }

@@ -12,17 +12,18 @@ import { Router } from '@angular/router';
 
 @Injectable()
 export class ApiKeysInterceptor implements HttpInterceptor {
+  
+  private readonly ACCESS_TOKEN = 'token';
 
   constructor(private router: Router) {}
 
   intercept(request: HttpRequest<unknown>, next: HttpHandler): Observable<HttpEvent<unknown>> {
-    const token = localStorage.getItem('token')
+    const token = localStorage.getItem(this.ACCESS_TOKEN)
     const hasToken = !!token;
 
     const reqClone = request.clone({
       headers: request.headers
-      // hasToken ? `Bearer ${token || ''}` :
-      .set('Authorization',  `Bearer ${environment.apiKey || ''}`)
+      .set('Authorization', hasToken ? `Bearer ${token || ''}` : `Bearer ${environment.apiKey || ''}`)
       .set('Accept', 'application/json'),
       url: `${environment.baseHost}/${request.url}`,
     })
